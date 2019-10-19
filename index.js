@@ -11,11 +11,16 @@ var baseUrl = "https://blockchain.info/rawblock"
 
 
 var getBlockHash = function (blockHash, depth){
-    
+
     request('https://blockchain.info/rawblock/' + blockHash, function (error, response, body) {
     if (!error && response.statusCode == 200) {
         //console.log(body) // Print the google web page.
         
+        
+
+
+    try{    
+
         var newNonce = JSON.parse(body).nonce >>> 0;
         nonce = newNonce > nonce ? nonce : newNonce;
         nonceBlock = newNonce > nonce ? nonceBlock : blockHash;
@@ -28,15 +33,24 @@ var getBlockHash = function (blockHash, depth){
             console.log('smallest nonce: ' + nonce + ' blockHash: '+ nonceBlock)
                 console.log('\nlargest nonce: ' + largestNonce + ' blockHash: '+ largestNonceBlock)
         }
+            }catch(anything){     
+                        getBlockHash(blockHash, depth)
+                
+                console.log('recovered from unexpected parse error')
+            console.log('smallest nonce: ' + nonce + ' blockHash: '+ nonceBlock)
+                console.log('\nlargest nonce: ' + largestNonce + ' blockHash: '+ largestNonceBlock)}
+
+
         
      }else{
          console.log('recovered from unexpected api error')
-         getBlockHash(blockHash, depth)
+            console.log('smallest nonce: ' + nonce + ' blockHash: '+ nonceBlock)
+                console.log('\nlargest nonce: ' + largestNonce + ' blockHash: '+ largestNonceBlock)
+        
      }
         
      
 })
-
 
     
     
